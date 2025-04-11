@@ -11,11 +11,11 @@
   }
   
   .hora {
-    font-size: 1.8rem;
+    font-size: 28px;
     font-weight: bold;
   }
   
   .data {
-    font-size: 1rem;
+    font-size: 18px;
     margin-top: 5px;
   }
