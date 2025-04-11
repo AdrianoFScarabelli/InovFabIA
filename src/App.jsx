@@ -7,6 +7,8 @@ const App = () => {
     '/foto1.jpg',
     '/foto2.jpg',
     '/foto3.jpg',
+    '/foto4.jpg',
+    '/foto5.jpg',
   ];
 
   const [indexAtual, setIndexAtual] = useState(0);
