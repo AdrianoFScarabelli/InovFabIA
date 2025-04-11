@@ -7,9 +7,9 @@ const Relogio = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setDataAtual(new Date());
-    }, 1000); // atualiza a cada segundo
+    }, 1000);
 
-    return () => clearInterval(timer); // limpa quando desmontar
+    return () => clearInterval(timer);
   }, []);
 
   const hora = dataAtual.toLocaleTimeString('pt-BR', {
