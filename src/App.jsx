@@ -36,7 +36,7 @@ const App = () => {
         />
       </div>
       <div className="welcome-container">
-        <h1 className="welcome">Bem vindo, faça uma pergunta ao InovFabIA para iniciar.</h1>
+        <h1 className="welcome">Bem-vindo, faça uma pergunta ao InovFabIA para iniciar.</h1>
       </div>
     </div>
     
