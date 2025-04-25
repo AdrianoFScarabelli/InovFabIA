@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Relogio from './Relogio';
 import './App.css';
 
@@ -12,6 +13,7 @@ const App = () => {
   ];
 
   const [indexAtual, setIndexAtual] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const intervalo = setInterval(() => {
@@ -23,10 +25,14 @@ const App = () => {
     return () => clearInterval(intervalo);
   }, [imagens.length]);
 
+  const handleTitleClick = () => {
+    navigate('/chat');
+  };
+
   return (
     <div>
       <div className="relogio-container">
-        <Relogio/>
+        <Relogio />
       </div>
       <div className="slider-container">
         <img
@@ -36,10 +42,11 @@ const App = () => {
         />
       </div>
       <div className="welcome-container">
-        <h1 className="welcome">Bem-vindo, faça uma pergunta ao InovFabIA para iniciar.</h1>
+        <h1 className="welcome" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+          Bem-vindo, faça uma pergunta ao InovFabIA para iniciar.
+        </h1>
       </div>
     </div>
-    
   );
 };
 

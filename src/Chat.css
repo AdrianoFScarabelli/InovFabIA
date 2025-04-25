@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body {
+  background-color: #000000;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logo {
+    width: 57px;
+    height: 57px;
+}
+
+.logo-container {
+    margin-top: 25px;
+    margin-left: 25px;
+}
+
+.titulo-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 708px;
+    height: 64px;
+    margin-top: 50px;
+    background-color: #212121;
+    display: flex;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.chat-container {
+    position: fixed;
+    left: 50%;
+    top: 25%;
+    transform: translateX(-50%);
+    width: 1276px;
+    height: 688px;
+    background-color: #212121;
+    display: flex;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #FFFFFF;
+    justify-content: end;
+    align-items: top;
+}
+
+.perguntas{
+    position: fixed;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background-color: #303030;
+    padding: 20px;
+    border-radius: 40px;
+}
+
+.resposta-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 313px;
+  height: 100px;
+  background-color: #212121;
+  display: flex;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.gif {
+    width: 100px;
+    height: 100px;
+}
