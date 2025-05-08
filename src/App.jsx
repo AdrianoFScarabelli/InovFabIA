@@ -43,7 +43,7 @@ const App = () => {
       </div>
       <div className="welcome-container">
         <h1 className="welcome" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
-          Bem-vindo, faça uma pergunta ao InovFabIA para iniciar.
+          Bem-vindo, aperte o botão do totem para iniciar uma conversa com o InovFabIA.
         </h1>
       </div>
     </div>
