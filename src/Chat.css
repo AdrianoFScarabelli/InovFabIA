@@ -23,7 +23,8 @@ body {
     transform: translateX(-50%);
     width: 708px;
     height: 64px;
-    margin-top: 50px;
+    top: 0;
+    margin-top: 25px;
     background-color: #212121;
     display: flex;
     border-radius: 10px;
@@ -40,10 +41,10 @@ body {
 .chat-container {
     position: fixed;
     left: 50%;
-    top: 25%;
+    top: 11%;
     transform: translateX(-50%);
-    width: 1276px;
-    height: 688px;
+    width: 1300px;
+    height: 700px;
     background-color: #212121;
     display: flex;
     border-radius: 10px;
@@ -67,8 +68,8 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 313px;
-  height: 100px;
+  width: 200px;
+  height: 80px;
   background-color: #212121;
   display: flex;
   border-radius: 10px;
@@ -78,6 +79,6 @@ body {
 }
 
 .gif {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 }

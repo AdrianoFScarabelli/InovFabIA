@@ -4,10 +4,9 @@
   right: 25px;
   background-color: #0080C0;
   color: white;
-  padding: 15px 20px;
+  padding: 5px 5px;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
   
 .hora {
@@ -16,6 +15,5 @@
 }
   
 .data {
-  font-size: 18px;
-  margin-top: 5px;
+  font-size: 16px;
 }

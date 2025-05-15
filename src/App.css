@@ -18,10 +18,9 @@ body {
 }
 
 .slider-image {
-  width: 1368px;
-  height: 833px;
+  width: 1920px;
+  height: 1080px;
   object-fit: cover;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
   transition: opacity 1s ease-in-out;
 }
 
@@ -37,7 +36,7 @@ body {
   border-radius: 10px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 25px;
   z-index: 10;
 }
 
