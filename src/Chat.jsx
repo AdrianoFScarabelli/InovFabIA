@@ -20,26 +20,47 @@ const Chat = () => {
 
   try {
     const blob = new Blob([pergunta], { type: 'text/plain' });
-    const file = new File([blob], 'pergunta.txt');
-
+    const file = new File([blob], 'pergunta.txt', { type: 'text/plain' });
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('https://kaue-api-llm-d9dpbadvbhfaezd0.brazilsouth-01.azurewebsites.net/speech/process-file/', {
-      method: 'POST',
-      body: formData,
+    const response = await fetch('http://127.0.0.1:8000/speech/process-file', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ pergunta: pergunta })
     });
 
-    const data = await response.json();
+    console.log("Response status:", response.status);
+    console.log("Response URL:", response.url);
+    console.log("Response redirected:", response.redirected);
 
-    setResposta(data || 'Sem resposta da API');
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error("Erro ao fazer parse do JSON:", e);
+      setResposta('Resposta não está em formato JSON');
+      setGifIndex(0);
+      return;
+    }
+
+    setResposta(data.result.content || 'Sem resposta da API');
     setGifIndex(2);
+
   } catch (error) {
     setResposta('Erro ao conectar com a API');
     setGifIndex(0);
     console.error(error);
   }
-  };
+};
+
 
   const handleGifClick = () => {
     enviarPergunta();
