@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Relogio from './Relogio';
 import './Chat.css';
 
@@ -11,10 +11,17 @@ const Chat = () => {
   const [gravando, setGravando] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogoClick = () => {
     navigate('/');
   };
+
+  useEffect(() => {
+    if (location.state?.iniciarGravacao) {
+      startGravacao();
+    }
+  }, [location.state]);
 
   const enviarPergunta = async (texto = pergunta) => {
     setGifIndex(1);

@@ -25,8 +25,34 @@ const App = () => {
     return () => clearInterval(intervalo);
   }, [imagens.length]);
 
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      console.log('✅ Conectado ao WebSocket');
+    };
+
+    socket.onmessage = (event) => {
+      console.log('📩 Mensagem do WebSocket:', event.data);
+
+      if (event.data === 'pressionado') {
+        navigate('/chat', { state: { iniciarGravacao: true } });
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error('❌ Erro no WebSocket:', error);
+    };
+
+    socket.onclose = () => {
+      console.warn('⚠️ WebSocket desconectado');
+    };
+
+    return () => socket.close();
+  }, [navigate]);
+
   const handleTitleClick = () => {
-    navigate('/chat');
+    navigate('/chat', { state: { iniciarGravacao: true } });
   };
 
   return (
@@ -34,6 +60,7 @@ const App = () => {
       <div className="relogio-container">
         <Relogio />
       </div>
+
       <div className="slider-container">
         <img
           src={imagens[indexAtual]}
@@ -41,8 +68,13 @@ const App = () => {
           className="slider-image"
         />
       </div>
+
       <div className="welcome-container">
-        <h1 className="welcome" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+        <h1
+          className="welcome"
+          onClick={handleTitleClick}
+          style={{ cursor: 'pointer' }}
+        >
           Bem-vindo, aperte o botão do totem para iniciar uma conversa com o InovFabIA.
         </h1>
       </div>
