@@ -56,19 +56,18 @@ const Chat = () => {
     const timeout = setTimeout(() => {
       console.log('⏳ Inatividade detectada, retornando à tela inicial...');
       navigate('/');
-    }, 30000); // 30 segundos
+    }, 30000);
 
-    return () => clearTimeout(timeout); // limpa o timer se novas mensagens chegarem
+    return () => clearTimeout(timeout);
   }, [mensagens, navigate]);
 
   useEffect(() => {
-    // Força o carregamento das vozes
+
     window.speechSynthesis.onvoiceschanged = () => {
       window.speechSynthesis.getVoices();
     };
   }, []);
 
-  // Função auxiliar para selecionar voz feminina em pt-BR
   const getVozFeminina = () => {
     const voices = window.speechSynthesis.getVoices();
     return voices.find(voice =>
@@ -92,15 +91,13 @@ const Chat = () => {
       const data = await response.json();
       const textoResposta = data.result?.content || 'Sem resposta da API';
 
-      // Adiciona pergunta e resposta ao histórico
       setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: textoResposta }]);
       setGifIndex(2);
 
-      // 🗣️ Falar resposta em voz alta
       const utterance = new SpeechSynthesisUtterance(textoResposta);
       utterance.lang = 'pt-BR';
       utterance.voice = getVozFeminina();
-      window.speechSynthesis.cancel(); // cancela falas anteriores
+      window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
 
     } catch (error) {
@@ -109,7 +106,6 @@ const Chat = () => {
       setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: erroMsg }]);
       setGifIndex(0);
 
-      // 🗣️ Falar mensagem de erro também
       const utteranceErro = new SpeechSynthesisUtterance(erroMsg);
       utteranceErro.lang = 'pt-BR';
       utteranceErro.voice = getVozFeminina();
