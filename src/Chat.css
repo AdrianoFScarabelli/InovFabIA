@@ -5,73 +5,87 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
+  overflow: hidden;
 }
 
 .logo {
-    width: 57px;
-    height: 57px;
+  width: 57px;
+  height: 57px;
 }
 
 .logo-container {
-    margin-top: 25px;
-    margin-left: 25px;
+  margin-top: 25px;
+  margin-left: 25px;
 }
 
 .titulo-container {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 708px;
-    height: 64px;
-    top: 0;
-    margin-top: 25px;
-    background-color: #212121;
-    display: flex;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 708px;
+  height: 64px;
+  top: 0;
+  margin-top: 25px;
+  background-color: #212121;
+  display: flex;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .titulo {
-    font-size: 28px;
-    font-weight: bold;
-    color: #FFFFFF;
+  font-size: 28px;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 
 .chat-container {
-    position: fixed;
-    left: 50%;
-    top: 11%;
-    transform: translateX(-50%);
-    width: 1300px;
-    height: 700px;
-    background-color: #212121;
-    display: flex;
-    border-radius: 10px;
-    font-size: 16px;
-    color: #FFFFFF;
-    /* justify-content: end; */
-    align-items: top;
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1300px;
+  height: 620px;
+  background-color: #212121;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #FFFFFF;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: scroll;
+
+  scrollbar-width: none;
 }
 
-.perguntas{
-    position: fixed;
-    margin-left: 980px;
-    margin-bottom: 20px;
-    background-color: #303030;
-    padding: 20px;
-    border-radius: 40px;
-    justify-content: end;
+.chat-container::-webkit-scrollbar {
+  display: none;
 }
 
-.resposta{
-    position: fixed;
-    margin-top: 100px;
-    margin-left: 10px;
-    margin-bottom: 20px;
-    background-color: #303030;
-    padding: 20px;
-    border-radius: 40px;
+.mensagem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.perguntas {
+  align-self: flex-end;
+  background-color: #303030;
+  padding: 15px 20px;
+  border-radius: 40px;
+  max-width: 600px;
+  text-align: right;
+}
+
+.resposta {
+  align-self: flex-start;
+  background-color: #303030;
+  padding: 15px 20px;
+  border-radius: 40px;
+  max-width: 600px;
+  text-align: left;
 }
 
 .resposta-container {
@@ -87,9 +101,10 @@ body {
   justify-content: center;
   align-items: center;
   margin-bottom: 25px;
+  z-index: 10;
 }
 
 .gif {
-    width: 80px;
-    height: 80px;
+  width: 80px;
+  height: 80px;
 }

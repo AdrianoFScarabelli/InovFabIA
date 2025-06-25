@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Relogio from './Relogio';
 import './Chat.css';
@@ -6,16 +6,18 @@ import './Chat.css';
 const Chat = () => {
   const gifs = ['/escutando.gif', '/processando.gif', '/respondendo.gif'];
   const [gifIndex, setGifIndex] = useState(0);
-  const [pergunta, setPergunta] = useState('O que é o laboratório InovFabLab?');
-  const [resposta, setResposta] = useState('');
   const [gravando, setGravando] = useState(false);
+  const [mensagens, setMensagens] = useState([]);
+  const mensagensRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogoClick = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    if (mensagensRef.current) {
+      mensagensRef.current.scrollTop = mensagensRef.current.scrollHeight;
+    }
+  }, [mensagens]);
 
   useEffect(() => {
     if (location.state?.iniciarGravacao) {
@@ -23,55 +25,58 @@ const Chat = () => {
     }
   }, [location.state]);
 
-  const enviarPergunta = async (texto = pergunta) => {
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      console.log('✅ WebSocket ativo em Chat.jsx');
+    };
+
+    socket.onmessage = (event) => {
+      console.log('📩 Mensagem recebida no Chat.jsx:', event.data);
+      if (event.data === 'pressionado') {
+        startGravacao();
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error('❌ Erro WebSocket em Chat.jsx:', error);
+    };
+
+    socket.onclose = () => {
+      console.warn('⚠️ WebSocket desconectado em Chat.jsx');
+    };
+
+    return () => socket.close();
+  }, []);
+
+  const enviarPergunta = async (textoPergunta) => {
     setGifIndex(1);
 
     try {
-
-      const blob = new Blob([pergunta], { type: 'text/plain' });
-      const file = new File([blob], 'pergunta.txt', { type: 'text/plain' });
-      const formData = new FormData();
-      formData.append('file', file);
-
       const response = await fetch('http://127.0.0.1:8000/speech/process-file', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pergunta: pergunta }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pergunta: textoPergunta }),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response URL:", response.url);
-      console.log("Response redirected:", response.redirected);
+      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
-      if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
-      }
+      const data = await response.json();
+      const textoResposta = data.result?.content || 'Sem resposta da API';
 
-    let data = {};
-    try {
-      data = await response.json();
-    } catch (e) {
-      console.error("Erro ao fazer parse do JSON:", e);
-      setResposta('Resposta não está em formato JSON');
-      setGifIndex(0);
-      return;
-    }
-
-    setResposta(data.result.content || 'Sem resposta da API');
-    setGifIndex(2);
-
+      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: textoResposta }]);
+      setGifIndex(2);
     } catch (error) {
-      setResposta('Erro ao conectar com a API');
+      console.error('Erro na LLM:', error);
+      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: 'Erro ao conectar com a API' }]);
       setGifIndex(0);
-      console.error(error);
     }
   };
 
   const startGravacao = async () => {
-    setPergunta('');
-    setResposta('');
+    if (gravando) return;
+
     setGifIndex(0);
     setGravando(true);
 
@@ -97,13 +102,12 @@ const Chat = () => {
 
           const data = await response.json();
           const texto = data.texto || 'Erro na transcrição';
-          setPergunta(texto);
 
           await enviarPergunta(texto);
 
         } catch (err) {
-          console.error('Erro ao transcrever:', err);
-          setPergunta('Erro ao transcrever áudio');
+          console.error('Erro na transcrição:', err);
+          setMensagens(prev => [...prev, { pergunta: 'Áudio não compreendido', resposta: 'Erro na transcrição' }]);
           setGifIndex(0);
         }
 
@@ -119,10 +123,14 @@ const Chat = () => {
 
     } catch (err) {
       console.error('Erro ao acessar microfone:', err);
-      setPergunta('Erro ao acessar microfone');
+      setMensagens(prev => [...prev, { pergunta: 'Erro ao acessar microfone', resposta: '' }]);
       setGravando(false);
       setGifIndex(0);
     }
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
   };
 
   const handleGifClick = () => {
@@ -149,11 +157,13 @@ const Chat = () => {
         <h1 className="titulo">Bem-vindo ao InovFabIA</h1>
       </div>
 
-      <div className="chat-container">
-        <p className="perguntas">{pergunta}</p>
-        {resposta && (
-          <p className="resposta">{resposta}</p>
-        )}
+      <div className="chat-container" ref={mensagensRef}>
+        {mensagens.map((msg, i) => (
+          <div key={i} className="mensagem">
+            <p className="perguntas"><strong>Você:</strong> {msg.pergunta}</p>
+            <p className="resposta"><strong>InovFabIA:</strong> {msg.resposta} <br/><br/>Quer realizar outra pergunta? Aperte o botão do totem novamente.</p>
+          </div>
+        ))}
       </div>
 
       <div className="resposta-container">

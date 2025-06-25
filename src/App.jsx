@@ -29,26 +29,28 @@ const App = () => {
     const socket = new WebSocket('ws://localhost:8080');
 
     socket.onopen = () => {
-      console.log('✅ Conectado ao WebSocket');
+      console.log('✅ Conectado ao WebSocket (App.jsx)');
     };
 
     socket.onmessage = (event) => {
-      console.log('📩 Mensagem do WebSocket:', event.data);
-
+      console.log('📩 Mensagem recebida (App.jsx):', event.data);
       if (event.data === 'pressionado') {
+        
         navigate('/chat', { state: { iniciarGravacao: true } });
       }
     };
 
     socket.onerror = (error) => {
-      console.error('❌ Erro no WebSocket:', error);
+      console.error('❌ Erro WebSocket (App.jsx):', error);
     };
 
     socket.onclose = () => {
-      console.warn('⚠️ WebSocket desconectado');
+      console.warn('⚠️ WebSocket desconectado (App.jsx)');
     };
 
-    return () => socket.close();
+    return () => {
+      socket.close();
+    };
   }, [navigate]);
 
   const handleTitleClick = () => {
@@ -75,7 +77,7 @@ const App = () => {
           onClick={handleTitleClick}
           style={{ cursor: 'pointer' }}
         >
-          Bem-vindo, aperte o botão do totem para iniciar uma conversa com o InovFabIA.
+          Bem-vindo, aperte o botão do totem para iniciar uma conversa com o InovFabIA
         </h1>
       </div>
     </div>
