@@ -50,6 +50,33 @@ const Chat = () => {
     return () => socket.close();
   }, []);
 
+  useEffect(() => {
+    if (mensagens.length === 0) return;
+
+    const timeout = setTimeout(() => {
+      console.log('⏳ Inatividade detectada, retornando à tela inicial...');
+      navigate('/');
+    }, 30000); // 30 segundos
+
+    return () => clearTimeout(timeout); // limpa o timer se novas mensagens chegarem
+  }, [mensagens, navigate]);
+
+  useEffect(() => {
+    // Força o carregamento das vozes
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.getVoices();
+    };
+  }, []);
+
+  // Função auxiliar para selecionar voz feminina em pt-BR
+  const getVozFeminina = () => {
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(voice =>
+      voice.lang === 'pt-BR' &&
+      /female|mulher|maria|brasil/i.test(voice.name)
+    ) || voices.find(voice => voice.lang === 'pt-BR');
+  };
+
   const enviarPergunta = async (textoPergunta) => {
     setGifIndex(1);
 
@@ -65,12 +92,29 @@ const Chat = () => {
       const data = await response.json();
       const textoResposta = data.result?.content || 'Sem resposta da API';
 
+      // Adiciona pergunta e resposta ao histórico
       setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: textoResposta }]);
       setGifIndex(2);
+
+      // 🗣️ Falar resposta em voz alta
+      const utterance = new SpeechSynthesisUtterance(textoResposta);
+      utterance.lang = 'pt-BR';
+      utterance.voice = getVozFeminina();
+      window.speechSynthesis.cancel(); // cancela falas anteriores
+      window.speechSynthesis.speak(utterance);
+
     } catch (error) {
       console.error('Erro na LLM:', error);
-      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: 'Erro ao conectar com a API' }]);
+      const erroMsg = 'Erro ao conectar com a API.';
+      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: erroMsg }]);
       setGifIndex(0);
+
+      // 🗣️ Falar mensagem de erro também
+      const utteranceErro = new SpeechSynthesisUtterance(erroMsg);
+      utteranceErro.lang = 'pt-BR';
+      utteranceErro.voice = getVozFeminina();
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utteranceErro);
     }
   };
 
@@ -101,13 +145,13 @@ const Chat = () => {
           });
 
           const data = await response.json();
-          const texto = data.texto || 'Erro na transcrição';
+          const texto = data.texto || 'Erro na transcrição.';
 
           await enviarPergunta(texto);
 
         } catch (err) {
           console.error('Erro na transcrição:', err);
-          setMensagens(prev => [...prev, { pergunta: 'Áudio não compreendido', resposta: 'Erro na transcrição' }]);
+          setMensagens(prev => [...prev, { pergunta: 'Áudio não compreendido.', resposta: 'Erro na transcrição.' }]);
           setGifIndex(0);
         }
 
@@ -123,7 +167,7 @@ const Chat = () => {
 
     } catch (err) {
       console.error('Erro ao acessar microfone:', err);
-      setMensagens(prev => [...prev, { pergunta: 'Erro ao acessar microfone', resposta: '' }]);
+      setMensagens(prev => [...prev, { pergunta: 'Erro ao acessar microfone.', resposta: '' }]);
       setGravando(false);
       setGifIndex(0);
     }
