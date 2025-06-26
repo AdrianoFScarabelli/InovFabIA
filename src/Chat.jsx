@@ -77,40 +77,46 @@ const Chat = () => {
   };
 
   const enviarPergunta = async (textoPergunta) => {
-    setGifIndex(1);
+  setGifIndex(1);
 
-    try {
-      const response = await fetch('http://127.0.0.1:8000/speech/process-file', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pergunta: textoPergunta }),
-      });
+  try {
+    const response = await fetch('http://127.0.0.1:8000/speech/process-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pergunta: textoPergunta }),
+    });
 
-      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+    if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
-      const data = await response.json();
-      const textoResposta = data.result?.content || 'Sem resposta da API';
+    const data = await response.json();
+    const textoResposta = data.result?.content || 'Sem resposta da API';
 
-      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: textoResposta }]);
-      setGifIndex(2);
+    setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: textoResposta }]);
 
-      const utterance = new SpeechSynthesisUtterance(textoResposta);
-      utterance.lang = 'pt-BR';
-      utterance.voice = getVozFeminina();
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(textoResposta);
+    utterance.lang = 'pt-BR';
+    utterance.voice = getVozFeminina();
 
-    } catch (error) {
-      console.error('Erro na LLM:', error);
-      const erroMsg = 'Erro ao conectar com a API.';
-      setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: erroMsg }]);
-      setGifIndex(0);
+    utterance.onstart = () => setGifIndex(2);
+    utterance.onend = () => setGifIndex(0);
 
-      const utteranceErro = new SpeechSynthesisUtterance(erroMsg);
-      utteranceErro.lang = 'pt-BR';
-      utteranceErro.voice = getVozFeminina();
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utteranceErro);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+
+  } catch (error) {
+    console.error('Erro na LLM:', error);
+    const erroMsg = 'Erro ao conectar com a API.';
+    setMensagens(prev => [...prev, { pergunta: textoPergunta, resposta: erroMsg }]);
+
+    const utteranceErro = new SpeechSynthesisUtterance(erroMsg);
+    utteranceErro.lang = 'pt-BR';
+    utteranceErro.voice = getVozFeminina();
+
+    utteranceErro.onstart = () => setGifIndex(2);
+    utteranceErro.onend = () => setGifIndex(0);
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utteranceErro);
     }
   };
 

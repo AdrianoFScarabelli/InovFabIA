@@ -9,23 +9,25 @@ body {
 }
 
 .logo {
-  width: 57px;
-  height: 57px;
+  width: 3.5vw;
+  height: auto;
+  max-width: 57px;
 }
 
 .logo-container {
-  margin-top: 25px;
-  margin-left: 25px;
+  margin-top: 1.5vh;
+  margin-left: 1.5vw;
 }
 
 .titulo-container {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  width: 708px;
+  width: 90%;
+  max-width: 720px;
   height: 64px;
   top: 0;
-  margin-top: 25px;
+  margin-top: 1.5vh;
   background-color: #212121;
   display: flex;
   border-radius: 10px;
@@ -35,28 +37,29 @@ body {
 }
 
 .titulo {
-  font-size: 28px;
+  font-size: 2.2vw;
   font-weight: bold;
   color: #FFFFFF;
+  text-align: center;
 }
 
 .chat-container {
   position: fixed;
-  top: 120px;
+  top: 130px;
   left: 50%;
   transform: translateX(-50%);
-  width: 1300px;
-  height: 620px;
+  width: 90vw;
+  max-width: 1300px;
+  height: 60vh;
   background-color: #212121;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 1rem;
   color: #FFFFFF;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow-y: scroll;
-
+  overflow-y: auto;
   scrollbar-width: none;
 }
 
@@ -75,8 +78,9 @@ body {
   background-color: #303030;
   padding: 15px 20px;
   border-radius: 40px;
-  max-width: 600px;
+  max-width: 70%;
   text-align: right;
+  word-wrap: break-word;
 }
 
 .resposta {
@@ -84,8 +88,9 @@ body {
   background-color: #303030;
   padding: 15px 20px;
   border-radius: 40px;
-  max-width: 600px;
+  max-width: 70%;
   text-align: left;
+  word-wrap: break-word;
 }
 
 .resposta-container {
@@ -93,8 +98,8 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
-  height: 80px;
+  width: 160px;
+  height: 70px;
   background-color: #212121;
   display: flex;
   border-radius: 10px;
@@ -105,6 +110,6 @@ body {
 }
 
 .gif {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
 }
